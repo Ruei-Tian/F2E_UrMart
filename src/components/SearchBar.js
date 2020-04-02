@@ -8,7 +8,7 @@ import { faSearch } from '@fortawesome/free-solid-svg-icons';
 
 import searchByKeyword from '../youtubeAPI';
 import { setLoading } from '../reducers/loadingReducer';
-import { addRecord, clearRecord } from '../reducers/searchRecordReducer';
+import { addResults, clearResults } from '../reducers/searchResultReducer';
 
 const StyledNav = styled.nav`
   padding: 30px;
@@ -31,16 +31,21 @@ const StyledNav = styled.nav`
 
 export default function SearchBar() {
   const isLoading = useSelector((state) => state.loadingReducer.isLoading);
-  const allResults = useSelector((state) => state.searchRecordReducer.record);
+  const allResults = useSelector((state) => state.searchResultReducer.results);
 
   const dispatch = useDispatch();
 
-  const [inputValue, setValue] = useState('熱門音樂');
+  const [inputValue, setValue] = useState('UrMart');
   const [nextPage, setNextPage] = useState('');
 
   async function fetchData() {
     dispatch(setLoading(true));
     const result = await (await searchByKeyword(inputValue, nextPage)).json();
+    if (result.items === undefined) {
+      alert('抱歉，沒有搜尋到相關影片');
+      dispatch(setLoading(false));
+      return;
+    }
     const items = [];
     result.items.map((item) => {
       const obj = {
@@ -52,7 +57,7 @@ export default function SearchBar() {
       items.push(obj);
     });
     setNextPage(result.nextPageToken);
-    dispatch(addRecord(inputValue, items));
+    dispatch(addResults(inputValue, items));
     dispatch(setLoading(false));
   }
 
@@ -84,7 +89,8 @@ export default function SearchBar() {
     const ifEnter = e.keyCode === 13;
     if (ifEnter) {
       e.preventDefault();
-      dispatch(clearRecord());
+      if (inputValue.trim() === '') { return; }
+      dispatch(clearResults());
       fetchData();
     }
   }
@@ -96,7 +102,7 @@ export default function SearchBar() {
           <FontAwesomeIcon icon={faSearch} />
           <input
             type="text"
-            placeholder="Search ..."
+            placeholder="影片搜尋"
             id="search-input"
             autoComplete="off"
             value={inputValue}

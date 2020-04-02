@@ -41,6 +41,7 @@ const StyleButton = styled.div`
 
 export default function BackToTop() {
   const [scrollY, setScrollY] = useState(0);
+
   useEffect(() => {
     function triggerScroll() {
       setScrollY(window.scrollY);

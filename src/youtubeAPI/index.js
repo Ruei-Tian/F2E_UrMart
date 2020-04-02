@@ -1,5 +1,5 @@
 const API_HOST = 'https://www.googleapis.com/youtube/v3/search';
-const API_KEY = 'AIzaSyD7SXaMoUrRo00VV9RZrCZu-xQFKif0vbI';
+const API_KEY = process.env.YOUTUBE_API_KEY;
 const MAX_RESULTS = 12;
 
 

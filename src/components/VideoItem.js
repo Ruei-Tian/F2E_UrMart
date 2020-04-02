@@ -1,5 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
+import device from '../device';
+
 
 const StyledCard = styled.div`
   color: blue;
@@ -24,6 +26,16 @@ const StyledCard = styled.div`
     text-overflow : ellipsis;
   }
 
+  @media ${device.laptop} { 
+    width: 45%;
+    a .card-img img {
+      width: 100%;
+    }
+  }
+
+  @media ${device.mobileM} { 
+    width: 90%;
+  }
 `;
 
 export default function VideoItem(props) {
